@@ -4,18 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liga Escolar de Voleibol · XOGADE</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00AEEF">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Voley XOGADE">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js');
-    });
-  }
-</script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -700,6 +688,176 @@ main {
   font-family: 'Nunito', sans-serif; margin-bottom: 1px;
 }
 
+
+/* ── PRÓXIMA JORNADA ─────────────────────────────────────────────────────── */
+.jorn-card {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--r); padding: clamp(20px,5vw,36px);
+  max-width: 800px; margin: 0 auto;
+  box-shadow: 0 2px 16px rgba(0,174,239,.07);
+  animation: fadeUp .35s ease;
+}
+
+.jorn-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 24px; gap: 12px;
+}
+
+.jorn-title {
+  font-family: 'Nunito', sans-serif; font-weight: 900;
+  font-size: clamp(1.3rem,4vw,1.7rem); color: var(--text);
+}
+
+.jorn-sub { color: var(--muted); font-size: .88rem; margin-top: 4px; font-weight: 600; }
+
+.jorn-section-label {
+  font-family: 'Nunito', sans-serif; font-weight: 800;
+  font-size: .72rem; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--muted); margin-bottom: 10px;
+}
+
+.jorn-venue-input {
+  width: 100%; background: var(--surface2); border: 2px solid var(--border);
+  border-radius: 12px; padding: 12px 16px; color: var(--text);
+  font-family: 'Nunito Sans', sans-serif; font-size: .95rem; font-weight: 600;
+  outline: none; transition: border-color .2s;
+}
+.jorn-venue-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,174,239,.1); }
+.jorn-venue-input::placeholder { color: #aac4d8; }
+
+.jorn-match-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 0; border-bottom: 1px solid rgba(184,221,240,.4);
+  flex-wrap: wrap;
+  animation: fadeUp .2s ease;
+}
+.jorn-match-row:last-child { border-bottom: none; }
+
+.jorn-match-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--cyan-l); color: var(--cyan-d);
+  font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .75rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.jorn-sel {
+  flex: 1; min-width: 140px;
+  background: var(--surface2); border: 2px solid var(--border);
+  border-radius: 10px; padding: 9px 12px; color: var(--text);
+  font-family: 'Nunito Sans', sans-serif; font-size: .88rem; font-weight: 600;
+  outline: none; transition: border-color .2s; cursor: pointer;
+}
+.jorn-sel:focus { border-color: var(--cyan); }
+
+.jorn-vs {
+  font-family: 'Nunito', sans-serif; font-weight: 900;
+  font-size: .72rem; color: var(--muted);
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: 6px; padding: 4px 8px; flex-shrink: 0;
+}
+
+.jorn-time {
+  width: 100px; flex-shrink: 0;
+  background: var(--surface2); border: 2px solid var(--border);
+  border-radius: 10px; padding: 9px 10px; color: var(--text);
+  font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .88rem;
+  outline: none; transition: border-color .2s;
+}
+.jorn-time:focus { border-color: var(--magenta); }
+
+.jorn-btn-rm {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: var(--magenta-l); border: 1.5px solid rgba(229,0,126,.2);
+  border-radius: 8px; color: var(--magenta); font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.jorn-btn-rm:hover { background: rgba(229,0,126,.2); }
+
+.jorn-btn-add {
+  width: 100%; margin-top: 14px;
+  background: none; border: 2px dashed var(--border); border-radius: 12px;
+  padding: 11px; color: var(--muted);
+  font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .88rem;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: all .2s;
+}
+.jorn-btn-add:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-l); }
+
+.jorn-actions {
+  display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px;
+}
+
+.jorn-empty {
+  text-align: center; color: var(--muted); padding: 24px;
+  font-size: .88rem; font-weight: 600;
+}
+
+/* Published view */
+.jorn-pub-card {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+  max-width: 700px; margin: 0 auto;
+  box-shadow: 0 2px 16px rgba(0,174,239,.07);
+  animation: fadeUp .35s ease;
+}
+
+.jorn-pub-header {
+  background: var(--surface2); border-bottom: 2px solid var(--border);
+  padding: 20px 24px; display: flex; align-items: center; gap: 16px;
+}
+
+.jorn-pub-icon { font-size: 2rem; }
+
+.jorn-pub-title {
+  font-family: 'Nunito', sans-serif; font-weight: 900;
+  font-size: 1.3rem; color: var(--text);
+}
+
+.jorn-pub-venue {
+  color: var(--muted); font-size: .88rem; font-weight: 600; margin-top: 3px;
+}
+
+.jorn-pub-list { padding: 16px 24px; }
+
+.jorn-pub-match {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 0; border-bottom: 1px solid rgba(184,221,240,.4);
+}
+.jorn-pub-match:last-child { border-bottom: none; }
+
+.jorn-pub-hora {
+  font-family: 'Nunito', sans-serif; font-weight: 900;
+  font-size: 1.1rem; color: var(--cyan-d);
+  min-width: 54px; flex-shrink: 0;
+}
+
+.jorn-pub-teams {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+}
+
+.jorn-pub-team {
+  flex: 1; font-family: 'Nunito', sans-serif; font-weight: 800;
+  font-size: 1rem; color: var(--text); text-align: center;
+}
+
+.jorn-pub-vs {
+  font-family: 'Nunito', sans-serif; font-weight: 900;
+  font-size: .7rem; color: var(--muted);
+  background: var(--magenta-l); border: 1px solid rgba(229,0,126,.2);
+  border-radius: 6px; padding: 3px 8px; flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .jorn-match-row { gap: 6px; }
+  .jorn-sel { min-width: 100px; font-size: .8rem; padding: 8px 8px; }
+  .jorn-time { width: 80px; }
+  .jorn-pub-match { gap: 10px; }
+  .jorn-pub-hora { font-size: .95rem; min-width: 44px; }
+  .jorn-pub-team { font-size: .9rem; }
+}
+
 @media print {
   *, *::before, *::after { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { background: #fff !important; color: #111; font-family: sans-serif; }
@@ -755,6 +913,7 @@ main {
 <nav class="steps-bar">
   <button class="step-btn active" id="stepBtn0" onclick="goToStep(0)">① Configuración</button>
   <button class="step-btn" id="stepBtn1" onclick="goToStep(1)" disabled>② Competición</button>
+  <button class="step-btn" id="stepBtn2" onclick="goToStep(2)" disabled>③ Próxima Jornada</button>
 </nav>
 
 <!-- ── MAIN ─────────────────────────────────────────────────────────────────── -->
@@ -867,6 +1026,7 @@ async function saveState() {
     await window._fbSave({
       step: state.step, setupStep: state.setupStep,
       activeCategory: state.activeCategory, categories: state.categories,
+      jornada: state.jornada,
       savedAt: new Date().toISOString()
     });
     showToast('💾 Guardado — visible para todos los usuarios');
@@ -892,11 +1052,19 @@ async function loadState() {
     if (saved.categories) {
       CATEGORIES.forEach(c => { if (saved.categories[c.id]) state.categories[c.id] = saved.categories[c.id]; });
     }
-    if (state.step === 1) {
+    if (state.step >= 1) {
       document.getElementById('stepBtn0').classList.replace('active','done');
-      document.getElementById('stepBtn1').classList.add('active');
       document.getElementById('stepBtn1').disabled = false;
+      document.getElementById('stepBtn2').disabled = false;
+      if (state.step === 2) {
+        document.getElementById('stepBtn1').className = 'step-btn done';
+        document.getElementById('stepBtn2').classList.add('active');
+      } else {
+        document.getElementById('stepBtn1').classList.add('active');
+        document.getElementById('stepBtn2').className = 'step-btn done';
+      }
     }
+    if (saved.jornada) state.jornada = saved.jornada;
   } catch(e) { console.info('No data in Firebase'); }
 }
 
@@ -921,7 +1089,7 @@ const CATEGORIES = [
   { id:'benjmas', label:'Benjamín Masculino', badge:'badge-benjmas', color:'benjmas' },
 ];
 
-let state = { step:0, setupStep:0, categories:{}, activeCategory:null };
+let state = { step:0, setupStep:0, categories:{}, activeCategory:null, jornada:{ matches:[], venue:'', saved:false } };
 CATEGORIES.forEach(c => { state.categories[c.id] = { teams:[], format:1, matches:[], setupDone:false }; });
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -929,7 +1097,9 @@ CATEGORIES.forEach(c => { state.categories[c.id] = { teams:[], format:1, matches
 // ═══════════════════════════════════════════════════════════════════════════════
 function render() {
   const main = document.getElementById('mainContent');
-  state.step === 0 ? renderSetup(main) : renderCompetition(main);
+  if (state.step === 0) renderSetup(main);
+  else if (state.step === 2) renderJornada(main);
+  else renderCompetition(main);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1015,6 +1185,7 @@ function finishSetup() {
   document.getElementById('stepBtn0').classList.replace('active','done');
   document.getElementById('stepBtn1').classList.add('active');
   document.getElementById('stepBtn1').disabled = false;
+  document.getElementById('stepBtn2').disabled = false;
   render();
 }
 
@@ -1049,12 +1220,30 @@ function goToStep(s) {
     document.getElementById('stepBtn1').className = 'step-btn';
     document.getElementById('stepBtn1').disabled = true;
     render();
+    return;
+  }
+  if (s === 2 && state.step >= 1) {
+    state.step = 2;
+    document.getElementById('stepBtn0').className = 'step-btn done';
+    document.getElementById('stepBtn1').className = 'step-btn done';
+    document.getElementById('stepBtn2').className = 'step-btn active';
+    render();
+    return;
+  }
+  if (s === 1 && state.step >= 1) {
+    state.step = 1;
+    document.getElementById('stepBtn0').className = 'step-btn done';
+    document.getElementById('stepBtn1').className = 'step-btn active';
+    document.getElementById('stepBtn2').className = 'step-btn done';
+    render();
+    return;
   }
 }
 
 function renderCompetition(main) {
   // Hide setup tab for guests
   document.getElementById('stepBtn0').style.display = currentRole === 'guest' ? 'none' : '';
+  document.getElementById('stepBtn2').style.display = '';
 
   const overviewHtml = CATEGORIES.map(cat => {
     const cd = state.categories[cat.id];
@@ -1174,6 +1363,141 @@ function editMatch(catId, matchId) {
   const m = state.categories[catId].matches.find(x => x.id === matchId);
   m.played = false; m.scoreLocal = ''; m.scoreVisitante = '';
   render();
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PRÓXIMA JORNADA
+// ═══════════════════════════════════════════════════════════════════════════════
+function renderJornada(main) {
+  // Hide setup tab for guests
+  document.getElementById('stepBtn0').style.display = currentRole === 'guest' ? 'none' : '';
+
+  const j = state.jornada;
+
+  // Build team list from all categories
+  const allTeams = [];
+  CATEGORIES.forEach(cat => {
+    state.categories[cat.id].teams.forEach(t => {
+      if (t && !allTeams.includes(t)) allTeams.push(t);
+    });
+  });
+
+  // Admin edit view
+  if (currentRole === 'admin') {
+    const matchRows = j.matches.map((m, i) => `
+      <div class="jorn-match-row" id="jmr_${i}">
+        <div class="jorn-match-num">${i + 1}</div>
+        <select class="jorn-sel" onchange="updateJornadaMatch(${i}, 'local', this.value)">
+          <option value="">— Equipo local —</option>
+          ${allTeams.map(t => `<option value="${escHtml(t)}" ${m.local === t ? 'selected' : ''}>${escHtml(t)}</option>`).join('')}
+        </select>
+        <span class="jorn-vs">VS</span>
+        <select class="jorn-sel" onchange="updateJornadaMatch(${i}, 'visitante', this.value)">
+          <option value="">— Equipo visitante —</option>
+          ${allTeams.map(t => `<option value="${escHtml(t)}" ${m.visitante === t ? 'selected' : ''}>${escHtml(t)}</option>`).join('')}
+        </select>
+        <input class="jorn-time" type="time" value="${m.hora || ''}" onchange="updateJornadaMatch(${i}, 'hora', this.value)" placeholder="00:00">
+        <button class="jorn-btn-rm" onclick="removeJornadaMatch(${i})">×</button>
+      </div>
+    `).join('');
+
+    main.innerHTML = `
+      <div class="jorn-card">
+        <div class="jorn-header">
+          <div>
+            <div class="jorn-title">Próxima Jornada</div>
+            <div class="jorn-sub">Configura los partidos que se disputarán en la próxima jornada</div>
+          </div>
+        </div>
+
+        <div class="jorn-section-label">📍 Pabellón</div>
+        <input class="jorn-venue-input" type="text"
+          placeholder="Nombre del pabellón o instalación..."
+          value="${escHtml(j.venue || '')}"
+          oninput="state.jornada.venue = this.value">
+
+        <div class="jorn-section-label" style="margin-top:22px">🏐 Partidos</div>
+        <div id="jornadaMatchList">
+          ${matchRows || '<p class="jorn-empty">Añade partidos con el botón de abajo</p>'}
+        </div>
+
+        <button class="jorn-btn-add" onclick="addJornadaMatch()">＋ Añadir partido</button>
+
+        <div class="jorn-actions">
+          <button class="btn-primary" onclick="publishJornada()">✅ Publicar jornada</button>
+        </div>
+      </div>
+    `;
+  } else {
+    // Guest view — show published jornada
+    if (!j.saved || (j.matches.filter(m => m.local && m.visitante).length === 0)) {
+      main.innerHTML = `
+        <div style="text-align:center;padding:60px 20px">
+          <div style="font-size:3rem;margin-bottom:16px">📅</div>
+          <h2 style="font-family:Nunito,sans-serif;font-weight:900;font-size:1.4rem;color:var(--text);margin-bottom:8px">Próxima jornada no disponible</h2>
+          <p style="color:var(--muted);font-size:.9rem;max-width:360px;margin:0 auto">El administrador todavía no ha publicado los partidos de la próxima jornada.</p>
+        </div>`;
+      return;
+    }
+
+    const matchCards = j.matches.filter(m => m.local && m.visitante).map((m, i) => `
+      <div class="jorn-pub-match">
+        <div class="jorn-pub-hora">${m.hora ? m.hora + 'h' : '—'}</div>
+        <div class="jorn-pub-teams">
+          <span class="jorn-pub-team">${escHtml(m.local)}</span>
+          <span class="jorn-pub-vs">VS</span>
+          <span class="jorn-pub-team">${escHtml(m.visitante)}</span>
+        </div>
+      </div>
+    `).join('');
+
+    main.innerHTML = `
+      <div class="jorn-pub-card">
+        <div class="jorn-pub-header">
+          <div class="jorn-pub-icon">📅</div>
+          <div>
+            <div class="jorn-pub-title">Próxima Jornada</div>
+            ${j.venue ? `<div class="jorn-pub-venue">📍 ${escHtml(j.venue)}</div>` : ''}
+          </div>
+        </div>
+        <div class="jorn-pub-list">
+          ${matchCards}
+        </div>
+      </div>
+    `;
+  }
+}
+
+function addJornadaMatch() {
+  state.jornada.matches.push({ local: '', visitante: '', hora: '' });
+  render();
+}
+
+function removeJornadaMatch(i) {
+  state.jornada.matches.splice(i, 1);
+  render();
+}
+
+function updateJornadaMatch(i, field, val) {
+  state.jornada.matches[i][field] = val;
+}
+
+function publishJornada() {
+  // collect current DOM values before saving
+  document.querySelectorAll('.jorn-match-row').forEach((row, i) => {
+    const sels = row.querySelectorAll('.jorn-sel');
+    const time = row.querySelector('.jorn-time');
+    if (state.jornada.matches[i]) {
+      state.jornada.matches[i].local     = sels[0] ? sels[0].value : '';
+      state.jornada.matches[i].visitante = sels[1] ? sels[1].value : '';
+      state.jornada.matches[i].hora      = time ? time.value : '';
+    }
+  });
+  const venueInp = document.querySelector('.jorn-venue-input');
+  if (venueInp) state.jornada.venue = venueInp.value;
+  state.jornada.saved = true;
+  saveState();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
